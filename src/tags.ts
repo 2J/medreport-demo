@@ -35,3 +35,11 @@ export function saveReportTags(id: number, tags: any[]) {
   all_tags[id] = tags;
   localStorage.setItem("reportsTags", JSON.stringify(all_tags));
 }
+
+export function getUnusedTags(id: number) {
+  let tags = getReportTags(id);
+  return _.filter(
+    TagsList,
+    (tag) => !_.some(tags, (reportTag) => reportTag.text === tag)
+  );
+}

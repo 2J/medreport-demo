@@ -21,6 +21,26 @@
 }
 
 .label-badge {
-	display: inline;
+	display: inline-block;
 	margin-right: 4px;
+}
+
+.bold {
+	font-weight: bold;
+}
+
+.inline {
+	display: inline;
+}
+
+.inline-block {
+	display: inline-block;
+}
+
+$breakpoint-sm: 768px;
+
+@media (max-width: $breakpoint-sm) {
+	.hidden-sm-down {
+		visibility: hidden;
+	}
 }

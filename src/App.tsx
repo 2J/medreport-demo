@@ -34,12 +34,12 @@ export default class App extends Component<AppProps, AppState> {
       <Router>
         <div className="container">
           <div className="row">
-            <div className="col-sm-3 margin-top-20">
+            <div className="col-sm-2 margin-top-20">
               <Link to="/" className="btn btn-dark">
                 Home
               </Link>
             </div>
-            <div className="col-sm-9 margin-top-20">
+            <div className="col-sm-10 margin-top-20">
               <SearchBar searchUpdated={this.searchUpdated.bind(this)} />
             </div>
           </div>
