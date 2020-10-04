@@ -1,2 +1,26 @@
 @import '~bootstrap/scss/bootstrap.scss';
 
+.margin-top-20 {
+	margin-top: 20px;
+}
+
+.reportsTable {
+	.reportNameCol {
+		font-style: italic;
+		width: 100px;
+	}
+
+	.textFirst {
+		font-weight: bold;
+	}
+
+	.textRest {
+		color: #777;
+		font-style: italic;
+	}
+}
+
+.label-badge {
+	display: inline;
+	margin-right: 4px;
+}

@@ -32,14 +32,17 @@ export default class App extends Component<AppProps, AppState> {
 
     return (
       <Router>
-        <div>
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-          </ul>
-
-          <SearchBar searchUpdated={this.searchUpdated.bind(this)} />
+        <div className="container">
+          <div className="row">
+            <div className="col-sm-3 margin-top-20">
+              <Link to="/" className="btn btn-dark">
+                Home
+              </Link>
+            </div>
+            <div className="col-sm-9 margin-top-20">
+              <SearchBar searchUpdated={this.searchUpdated.bind(this)} />
+            </div>
+          </div>
 
           <hr />
 

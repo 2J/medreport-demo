@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { useParams } from "react-router-dom";
 import { searchReportsById } from "./search";
+import {saveReportTags} from "./tags";
 import _ from "lodash";
 
 function Report() {
@@ -34,7 +35,9 @@ class ReportComponent extends Component<ReportProps, ReportState> {
       });
     } else {
       this.setState({ reportExists: false });
-    }
+	}
+	
+	saveReportTags(_.parseInt(id), [{text: "Tag 1", active: true}, {text: "Tag 2", active: false}]);
   }
 
   render() {

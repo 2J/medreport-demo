@@ -1,6 +1,8 @@
 import React, { Component } from "react";
-import { useParams } from "react-router-dom";
-import { searchReportsById, searchReportsByText } from "./search";
+import { Link } from "react-router-dom";
+import { searchReportsByText } from "./search";
+import Tag from "./Tag";
+import { getReportTags } from "./tags";
 import _ from "lodash";
 
 interface ReportsProps {
@@ -10,12 +12,13 @@ interface ReportsProps {
 interface ReportsState {
   reports: any;
   lastSearchText: any;
+  tags: any;
 }
 
 class Reports extends Component<ReportsProps, ReportsState> {
   constructor(props: any) {
     super(props);
-    this.state = { lastSearchText: undefined, reports: [] };
+    this.state = { lastSearchText: undefined, reports: [], tags: {} };
   }
 
   componentDidMount() {
@@ -43,7 +46,7 @@ class Reports extends Component<ReportsProps, ReportsState> {
 
   renderText(text: string) {
     let textLimit = 200;
-    let firstSentence = text.split(".", 1)[0];
+    let firstSentence = _.split(text, ".", 1)[0];
     // Add period if exist
     if (text[firstSentence.length] === ".") {
       firstSentence += ".";
@@ -51,7 +54,7 @@ class Reports extends Component<ReportsProps, ReportsState> {
     // Limit text length
     firstSentence = firstSentence.substr(0, textLimit);
     let textRest = text.substr(
-      firstSentence.length + 1,
+      firstSentence.length,
       textLimit - firstSentence.length
     );
 
@@ -67,6 +70,23 @@ class Reports extends Component<ReportsProps, ReportsState> {
     );
   }
 
+  renderTags(id: number) {
+	  
+    let tags = getReportTags(id);
+    return (
+      <>
+        {tags.map((tag: any, i: any) => (
+          <Tag
+            key={id + "_" + i}
+            isOnDoc={true}
+            active={tag.active}
+            text={tag.text}
+          ></Tag>
+        ))}
+      </>
+    );
+  }
+
   render() {
     let { reports } = this.state;
 
@@ -75,7 +95,7 @@ class Reports extends Component<ReportsProps, ReportsState> {
     }
 
     return (
-      <table className="table">
+      <table className="table reportsTable">
         <thead>
           <tr>
             <th>#</th>
@@ -88,8 +108,12 @@ class Reports extends Component<ReportsProps, ReportsState> {
             return (
               <tr key={report.id}>
                 <td>{report.id}</td>
-                <td>{report.name}</td>
-                <td>{this.renderText(report.text)}</td>
+                <td className="reportNameCol">
+                  <Link to={"/report/" + report.id}>{report.name}</Link>
+                </td>
+                <td>
+                  {this.renderText(report.text)} {this.renderTags(report.id)}
+                </td>
               </tr>
             );
           })}
