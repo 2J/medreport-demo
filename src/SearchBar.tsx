@@ -1,18 +1,31 @@
-import React from "react";
+import React, { Component } from "react";
 
-function SearchBar() {
-
-  return (
-    <div>
-      <input
-        type="text"
-        className="form-control"
-        id="searchbar"
-        aria-describedby="searchBar"
-        placeholder="Search..."
-      ></input>
-    </div>
-  );
+interface SearchBarProps {
+  searchUpdated: any;
 }
 
-export default SearchBar;
+interface SearchBarState {}
+
+export default class SearchBar extends Component<
+  SearchBarProps,
+  SearchBarState
+> {
+  inputChanged = (searchText: string) => {
+    this.props.searchUpdated(searchText);
+  };
+
+  render() {
+    return (
+      <div>
+        <input
+          type="text"
+          className="form-control"
+          id="searchbar"
+          aria-describedby="searchBar"
+          placeholder="Search..."
+          onChange={(e) => this.inputChanged(e.target.value)}
+        ></input>
+      </div>
+    );
+  }
+}

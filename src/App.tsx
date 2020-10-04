@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import "./App.scss";
 import {
   BrowserRouter as Router,
@@ -8,42 +8,49 @@ import {
   useParams,
 } from "react-router-dom";
 import Report from "./Report";
+import Reports from "./Reports";
 import SearchBar from "./SearchBar";
 
-function App() {
-  return (
-    <Router>
-      <div>
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-        </ul>
+interface AppProps {}
 
-        <SearchBar />
-
-        <hr />
-
-        <Switch>
-          <Route exact path="/">
-            <Home />
-          </Route>
-          <Route path="/report/:id" children={<Report />} />
-        </Switch>
-      </div>
-    </Router>
-  );
+interface AppState {
+  searchText: string;
 }
 
-// You can think of these components as "pages"
-// in your app.
+export default class App extends Component<AppProps, AppState> {
+  constructor(props: any) {
+    super(props);
+    this.state = { searchText: "" };
+  }
 
-function Home() {
-  return (
-    <div>
-      <h2>Home</h2>
-    </div>
-  );
+  searchUpdated(searchText: string) {
+    this.setState({ searchText: searchText });
+  }
+
+  render() {
+    let searchText = this.state.searchText;
+
+    return (
+      <Router>
+        <div>
+          <ul>
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+          </ul>
+
+          <SearchBar searchUpdated={this.searchUpdated.bind(this)} />
+
+          <hr />
+
+          <Switch>
+            <Route exact path="/">
+              <Reports searchText={searchText} />
+            </Route>
+            <Route path="/report/:id" component={Report} />
+          </Switch>
+        </div>
+      </Router>
+    );
+  }
 }
-
-export default App;

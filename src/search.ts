@@ -12,26 +12,25 @@ export async function openReports() {
 }
 
 export async function searchReportsByText(text: string) {
-  let search_text = _.trim(text);
+  let search_text = _.lowerCase(_.trim(text));
 
   let reports = await openReports();
 
   let filtered_reports = _.filter(
     reports,
     (report) =>
-      _.includes(report.id, search_text) ||
-      _.includes(report.name, search_text) ||
-      _.includes(report.text, search_text)
+      _.includes(_.lowerCase(report.id), search_text) ||
+      _.includes(_.lowerCase(report.name), search_text) ||
+      _.includes(_.lowerCase(report.text).replace(/\n/, ""), search_text)
   );
 
   return filtered_reports;
 }
 
-export async function searchReportsById(id: string) {
-  let id_num = _.parseInt(id);
+export async function searchReportsById(id: number) {
   let reports = await openReports();
 
-  let filtered_reports = _.find(reports, { id: id_num });
+  let filtered_reports = _.find(reports, { id: id });
 
   return filtered_reports;
 }
