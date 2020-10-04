@@ -23,10 +23,12 @@
 
 # How to Run
 
-1. Run the following command to create the docker image and run it
+1. Clone the repo and navigate to the root directory
+
+2. Run the following command to create the docker image and run it
 
 ```
 $ make build && make run
 ```
 
-2. Navigate to the following URL: http://localhost:5000
+3. Navigate to the following URL: http://localhost:5000
