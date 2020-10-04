@@ -4,6 +4,7 @@ import { searchReportsById } from "./search";
 import { saveReportTags, getUnusedTags, getReportTags } from "./tags";
 import Tag from "./Tag";
 import _ from "lodash";
+import $ from "jquery";
 
 function Report() {
   let { id } = useParams();
@@ -39,20 +40,86 @@ class ReportComponent extends Component<ReportProps, ReportState> {
     }
   }
 
+  tagDragStart(e: any, tag: string, used: boolean) {
+    e.dataTransfer.setData("tag", tag);
+    e.dataTransfer.setData("used", used);
+  }
+
+  addTag(tag: string) {
+    let { id } = this.props;
+    let allTags = getReportTags(_.parseInt(id));
+    allTags.push({ text: tag, active: true });
+    saveReportTags(_.parseInt(id), allTags);
+    this.setState(this.state); // force rerender
+  }
+
+  removeTag(tag: string) {
+    let { id } = this.props;
+    let allTags = getReportTags(_.parseInt(id));
+    allTags = _.filter(allTags, (reportTag) => reportTag.text !== tag);
+    saveReportTags(_.parseInt(id), allTags);
+    this.setState(this.state); // force rerender
+  }
+
+  changeTagActiveStatus(tag: string) {
+    let { id } = this.props;
+    let allTags = getReportTags(_.parseInt(id));
+    allTags = allTags.map((reportTag: { text: string; active: boolean }) => {
+      if (reportTag.text === tag) {
+        reportTag.active = !reportTag.active;
+      }
+      return reportTag;
+    });
+    saveReportTags(_.parseInt(id), allTags);
+    this.setState(this.state); // force rerender
+  }
+
+  allowDrop(e: any) {
+    e.preventDefault();
+  }
+
+  reportDrop(e: any) {
+    e.preventDefault();
+    let tag = e.dataTransfer.getData("tag");
+    let used = e.dataTransfer.getData("used");
+    if (used === "false") {
+      this.addTag(tag);
+    }
+  }
+
+  unusedDrop(e: any) {
+    e.preventDefault();
+    let tag = e.dataTransfer.getData("tag");
+    let used = e.dataTransfer.getData("used");
+    console.log(tag);
+    if (used === "true") {
+      this.removeTag(tag);
+    }
+    this.setState(this.state); // force rerender
+  }
+
   renderUnusedTags() {
     let { id } = this.props;
     let unusedTags = getUnusedTags(_.parseInt(id));
 
     return (
       <>
+        <span className="bold margin-top-20">Unused Tags</span> <br />
         {unusedTags.map((tag: any, i: any) => (
-          <Tag
+          <div
             key={id + "_un_" + i}
-            isOnDoc={false}
-            active={false}
-            text={tag}
-            controls={false}
-          ></Tag>
+            className="inline-block"
+            draggable="true"
+            onDragStart={(e) => this.tagDragStart(e, tag, false)}
+            onClick={(e) => this.addTag(tag)}
+          >
+            <Tag
+              isOnDoc={false}
+              active={false}
+              text={tag}
+              controls={false}
+            ></Tag>
+          </div>
         ))}
       </>
     );
@@ -67,24 +134,38 @@ class ReportComponent extends Component<ReportProps, ReportState> {
       <>
         <span className="bold">Active Tags</span> <br />
         {activeTags.map((tag: any, i: any) => (
-          <Tag
+          <div
             key={id + "_a_" + i}
-            isOnDoc={true}
-            active={tag.active}
-            text={tag.text}
-            controls={true}
-          ></Tag>
+            className="inline-block"
+            draggable="true"
+            onDragStart={(e) => this.tagDragStart(e, tag.text, true)}
+            onClick={(e) => this.changeTagActiveStatus(tag.text)}
+          >
+            <Tag
+              isOnDoc={true}
+              active={tag.active}
+              text={tag.text}
+              controls={true}
+            ></Tag>
+          </div>
         ))}
         <br />
         <span className="bold margin-top-20">Inctive Tags</span> <br />
         {inactiveTags.map((tag: any, i: any) => (
-          <Tag
+          <div
             key={id + "_in_" + i}
-            isOnDoc={true}
-            active={tag.active}
-            text={tag.text}
-            controls={true}
-          ></Tag>
+            className="inline-block"
+            draggable="true"
+            onDragStart={(e) => this.tagDragStart(e, tag.text, true)}
+            onClick={(e) => this.changeTagActiveStatus(tag.text)}
+          >
+            <Tag
+              isOnDoc={true}
+              active={tag.active}
+              text={tag.text}
+              controls={true}
+            ></Tag>
+          </div>
         ))}
       </>
     );
@@ -104,14 +185,28 @@ class ReportComponent extends Component<ReportProps, ReportState> {
     return (
       <>
         <div className="row">
-          <div className="col-md-2">
+          <div
+            className="col-md-2"
+            onDrop={(e) => this.unusedDrop(e)}
+            onDragOver={(e) => this.allowDrop(e)}
+          >
             <div className="hidden-sm-down">{this.renderUnusedTags()}</div>
           </div>
-          <div className="col-md-8 col-sm-12">
+          <div
+            className="col-md-8 col-sm-12"
+            onDrop={(e) => this.reportDrop(e)}
+            onDragOver={(e) => this.allowDrop(e)}
+          >
             <h2>{report.name}</h2>
             <p>{report.text}</p>
           </div>
-          <div className="col-md-2 col-sm-12">{this.renderUsedTags()}</div>
+          <div
+            className="col-md-2 col-sm-12"
+            onDrop={(e) => this.reportDrop(e)}
+            onDragOver={(e) => this.allowDrop(e)}
+          >
+            {this.renderUsedTags()}
+          </div>
         </div>
       </>
     );

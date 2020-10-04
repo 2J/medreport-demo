@@ -71,7 +71,7 @@ class Reports extends Component<ReportsProps, ReportsState> {
   }
 
   renderTags(id: number) {
-    let tags = getReportTags(id);
+    let tags = _.sortBy(getReportTags(id), (tag) => !tag.active); // Display active tags first
     return (
       <>
         {tags.map((tag: any, i: any) => (
