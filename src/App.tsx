@@ -1,12 +1,6 @@
 import React, { Component } from "react";
 import "./App.scss";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useParams,
-} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Report from "./Report";
 import Reports from "./Reports";
 import SearchBar from "./SearchBar";

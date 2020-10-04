@@ -7,6 +7,7 @@ import Tag from "./Tag";
 import _ from "lodash";
 
 function Report() {
+  // @ts-ignore
   let { id } = useParams();
 
   return <ReportComponent id={id} />;
@@ -184,12 +185,7 @@ class ReportComponent extends Component<ReportProps, ReportState> {
             onDragStart={(e) => this.tagDragStart(e, tag, false)}
             onClick={(e) => this.addTag(tag)}
           >
-            <Tag
-              isOnDoc={false}
-              active={false}
-              text={tag}
-              controls={false}
-            ></Tag>
+            <Tag isOnDoc={false} active={false} text={tag}></Tag>
           </div>
         ))}
       </>
@@ -212,12 +208,7 @@ class ReportComponent extends Component<ReportProps, ReportState> {
             onDragStart={(e) => this.tagDragStart(e, tag.text, true)}
             onClick={(e) => this.changeTagActiveStatus(tag.text)}
           >
-            <Tag
-              isOnDoc={true}
-              active={tag.active}
-              text={tag.text}
-              controls={true}
-            ></Tag>
+            <Tag isOnDoc={true} active={tag.active} text={tag.text}></Tag>
           </div>
         ))}
         <br />
@@ -230,12 +221,7 @@ class ReportComponent extends Component<ReportProps, ReportState> {
             onDragStart={(e) => this.tagDragStart(e, tag.text, true)}
             onClick={(e) => this.changeTagActiveStatus(tag.text)}
           >
-            <Tag
-              isOnDoc={true}
-              active={tag.active}
-              text={tag.text}
-              controls={true}
-            ></Tag>
+            <Tag isOnDoc={true} active={tag.active} text={tag.text}></Tag>
           </div>
         ))}
       </>

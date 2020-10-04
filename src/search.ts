@@ -16,7 +16,6 @@ export async function searchReportsByText(text: string) {
   let search_text = _.lowerCase(_.trim(text));
 
   let reports = await openReports();
-  let reportsTags = getReportsTags();
 
   let filtered_reports = _.filter(reports, (report) => {
     return (

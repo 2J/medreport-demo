@@ -80,7 +80,6 @@ class Reports extends Component<ReportsProps, ReportsState> {
             isOnDoc={true}
             active={tag.active}
             text={tag.text}
-            controls={false}
           ></Tag>
         ))}
       </>

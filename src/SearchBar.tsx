@@ -1,11 +1,4 @@
 import React, { Component } from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useParams,
-} from "react-router-dom";
 
 interface SearchBarProps {
   searchUpdated: any;

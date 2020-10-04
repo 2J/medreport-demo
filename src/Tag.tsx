@@ -4,14 +4,13 @@ interface TagProps {
   text: string;
   active: boolean;
   isOnDoc: boolean;
-  controls: boolean;
 }
 
 interface TagState {}
 
 export default class Tag extends Component<TagProps, TagState> {
   render() {
-    let { text, active, isOnDoc, controls } = this.props;
+    let { text, active, isOnDoc } = this.props;
 
     let badgeType = "badge-secondary";
     if (isOnDoc) {
@@ -22,11 +21,6 @@ export default class Tag extends Component<TagProps, TagState> {
       }
     }
 
-    return (
-      <span className={"label-badge badge " + badgeType}>
-        {text}
-        {/*controls ? " X" : null*/}
-      </span>
-    );
+    return <span className={"label-badge badge " + badgeType}>{text}</span>;
   }
 }
