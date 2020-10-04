@@ -162,7 +162,7 @@ class ReportComponent extends Component<ReportProps, ReportState> {
     e.preventDefault();
     let tag = e.dataTransfer.getData("tag");
     let used = e.dataTransfer.getData("used");
-    console.log(tag);
+
     if (used === "true") {
       this.removeTag(tag);
     }
