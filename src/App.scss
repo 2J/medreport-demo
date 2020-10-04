@@ -44,3 +44,7 @@ $breakpoint-sm: 768px;
 		visibility: hidden;
 	}
 }
+
+.disabled-link {
+	pointer-events: none;
+}

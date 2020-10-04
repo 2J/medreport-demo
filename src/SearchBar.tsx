@@ -1,4 +1,11 @@
 import React, { Component } from "react";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  useParams,
+} from "react-router-dom";
 
 interface SearchBarProps {
   searchUpdated: any;
@@ -10,9 +17,9 @@ export default class SearchBar extends Component<
   SearchBarProps,
   SearchBarState
 > {
-  inputChanged = (searchText: string) => {
+  inputChanged(searchText: string) {
     this.props.searchUpdated(searchText);
-  };
+  }
 
   render() {
     return (

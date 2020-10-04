@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { searchReportsById } from "./search";
 import { saveReportTags, getUnusedTags, getReportTags } from "./tags";
+import { searchReportsByText } from "./search";
 import Tag from "./Tag";
 import _ from "lodash";
-import $ from "jquery";
 
 function Report() {
   let { id } = useParams();
@@ -19,25 +19,96 @@ interface ReportProps {
 interface ReportState {
   report: any;
   reportExists: boolean;
+  reports: any;
+  reportId: number;
 }
 
 class ReportComponent extends Component<ReportProps, ReportState> {
   constructor(props: any) {
     super(props);
-    this.state = { report: undefined, reportExists: true };
+    this.state = {
+      report: undefined,
+      reportExists: true,
+      reports: [],
+      reportId: -1,
+    };
+  }
+
+  updateReport(id: number) {
+    this.setState({ reportId: id });
+
+    if (_.isNumber(id)) {
+      searchReportsById(id).then((report) => {
+        this.setState({ report: report, reportExists: !!report });
+      });
+    } else {
+      this.setState({ reportExists: false });
+    }
+
+    // Use search query for navigation
+    // @ts-ignore
+    let searchQuery = document.getElementById("searchbar").value;
+    searchReportsByText(searchQuery).then((reports) => {
+      this.setState({ reports: reports });
+    });
   }
 
   componentDidMount() {
     let { id } = this.props;
 
     let parsed_id = _.parseInt(id);
-    if (_.isNumber(parsed_id)) {
-      searchReportsById(parsed_id).then((report) => {
-        this.setState({ report: report, reportExists: !!report });
-      });
-    } else {
-      this.setState({ reportExists: false });
+
+    this.updateReport(parsed_id);
+  }
+
+  componentDidUpdate() {
+    let { id } = this.props;
+    let { reportId } = this.state;
+    let parsed_id = _.parseInt(id);
+    if (reportId === -1 || parsed_id === reportId) {
+      return;
     }
+    this.setState({ reportId: parsed_id });
+    this.updateReport(parsed_id);
+  }
+
+  renderNavigation() {
+    let { report, reports } = this.state;
+    let currentIndex = _.findIndex(reports, { id: report.id });
+    let backActive = currentIndex > 0;
+    let forwardActive = currentIndex !== -1 && currentIndex < reports.length;
+
+    let backId = 0;
+    let forwardId = 0;
+
+    if (backActive) {
+      backId = reports[currentIndex - 1].id;
+    }
+    if (forwardActive) {
+      forwardId = reports[currentIndex + 1].id;
+    }
+
+    return (
+      <div>
+        <Link
+          className={
+            "btn btn-primary " + (backActive ? "" : "disabled disabled-link")
+          }
+          to={"/report/" + backId}
+        >
+          ←
+        </Link>
+        &nbsp;
+        <Link
+          className={
+            "btn btn-primary " + (forwardActive ? "" : "disabled disabled-link")
+          }
+          to={"/report/" + forwardId}
+        >
+          →
+        </Link>
+      </div>
+    );
   }
 
   tagDragStart(e: any, tag: string, used: boolean) {
@@ -190,6 +261,7 @@ class ReportComponent extends Component<ReportProps, ReportState> {
             onDrop={(e) => this.unusedDrop(e)}
             onDragOver={(e) => this.allowDrop(e)}
           >
+            {this.renderNavigation()}
             <div className="hidden-sm-down">{this.renderUnusedTags()}</div>
           </div>
           <div

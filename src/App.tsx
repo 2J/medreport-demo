@@ -35,7 +35,7 @@ export default class App extends Component<AppProps, AppState> {
         <div className="container">
           <div className="row">
             <div className="col-sm-2 margin-top-20">
-              <Link to="/" className="btn btn-dark">
+              <Link to="/" className="btn btn-dark" id="homeButton">
                 Home
               </Link>
             </div>
